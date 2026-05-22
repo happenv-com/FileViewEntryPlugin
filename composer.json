@@ -1,5 +1,5 @@
 {
-  "name": "gheith3/filament-file-view-entry",
+  "name": "happenv/filament-file-view-entry",
   "description": "A Filament plugin for displaying file attachments with type-specific icons and modal preview",
   "type": "library",
   "license": "MIT",
