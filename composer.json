@@ -1,5 +1,5 @@
-{
-  "name": "happenv/filament-file-view-entry",
+1{
+  "name": "happenv-com/filament-file-view-entry",
   "description": "A Filament plugin for displaying file attachments with type-specific icons and modal preview",
   "type": "library",
   "license": "MIT",
