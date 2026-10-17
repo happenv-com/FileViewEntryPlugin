@@ -2,8 +2,13 @@
 
 namespace gheith3\FileViewEntryPlugin\Infolists\Components;
 
+use BackedEnum;
 use Closure;
 use Filament\Infolists\Components\Entry;
+use Filament\Support\Facades\FilamentIcon;
+use Filament\Support\Icons\Heroicon;
+use gheith3\FileViewEntryPlugin\View\FileViewEntryIconAlias;
+use Illuminate\Contracts\Support\Htmlable;
 use Illuminate\Support\Facades\Storage;
 
 class FileViewEntry extends Entry
@@ -306,7 +311,11 @@ class FileViewEntry extends Entry
         return in_array($type, ['image', 'video', 'audio', 'pdf', 'text']);
     }
 
-    public function getFileIcon(string $fileType, ?string $extension = null): string
+    /**
+     * The icon for a file type: the entry's own `customIcons()` first (by extension, then by type),
+     * then an alias registered by the host, then the stock Heroicon.
+     */
+    public function getFileIcon(string $fileType, ?string $extension = null): string|BackedEnum|Htmlable
     {
         $customIcons = $this->getCustomIcons();
 
@@ -320,18 +329,20 @@ class FileViewEntry extends Entry
             return $customIcons[$fileType];
         }
 
-        return match ($fileType) {
-            'image' => 'heroicon-o-photo',
-            'video' => 'heroicon-o-video-camera',
-            'audio' => 'heroicon-o-musical-note',
-            'pdf' => 'heroicon-o-document-text',
-            'text' => 'heroicon-o-document-text',
-            'document' => 'heroicon-o-document',
-            'spreadsheet' => 'heroicon-o-table-cells',
-            'presentation' => 'heroicon-o-presentation-chart-bar',
-            'archive' => 'heroicon-o-archive-box',
-            default => 'heroicon-o-document',
+        [$alias, $default] = match ($fileType) {
+            'image' => [FileViewEntryIconAlias::FILE_TYPES_IMAGE, Heroicon::OutlinedPhoto],
+            'video' => [FileViewEntryIconAlias::FILE_TYPES_VIDEO, Heroicon::OutlinedVideoCamera],
+            'audio' => [FileViewEntryIconAlias::FILE_TYPES_AUDIO, Heroicon::OutlinedMusicalNote],
+            'pdf' => [FileViewEntryIconAlias::FILE_TYPES_PDF, Heroicon::OutlinedDocumentText],
+            'text' => [FileViewEntryIconAlias::FILE_TYPES_TEXT, Heroicon::OutlinedDocumentText],
+            'document' => [FileViewEntryIconAlias::FILE_TYPES_DOCUMENT, Heroicon::OutlinedDocument],
+            'spreadsheet' => [FileViewEntryIconAlias::FILE_TYPES_SPREADSHEET, Heroicon::OutlinedTableCells],
+            'presentation' => [FileViewEntryIconAlias::FILE_TYPES_PRESENTATION, Heroicon::OutlinedPresentationChartBar],
+            'archive' => [FileViewEntryIconAlias::FILE_TYPES_ARCHIVE, Heroicon::OutlinedArchiveBox],
+            default => [FileViewEntryIconAlias::FILE_TYPES_GENERIC, Heroicon::OutlinedDocument],
         };
+
+        return FilamentIcon::resolve($alias) ?? $default;
     }
 
     public function getFileSize(string $path): ?string

@@ -1,5 +1,6 @@
 <?php
 
+use Filament\Support\Icons\Heroicon;
 use gheith3\FileViewEntryPlugin\Infolists\Components\FileViewEntry;
 
 it('can create file view entry', function () {
@@ -110,11 +111,11 @@ it('determines if file can be previewed', function () {
 it('returns correct icons for file types', function () {
     $entry = FileViewEntry::make('files');
 
-    expect($entry->getFileIcon('image'))->toBe('heroicon-o-photo')
-        ->and($entry->getFileIcon('video'))->toBe('heroicon-o-video-camera')
-        ->and($entry->getFileIcon('audio'))->toBe('heroicon-o-musical-note')
-        ->and($entry->getFileIcon('pdf'))->toBe('heroicon-o-document-text')
-        ->and($entry->getFileIcon('other'))->toBe('heroicon-o-document');
+    expect($entry->getFileIcon('image'))->toBe(Heroicon::OutlinedPhoto)
+        ->and($entry->getFileIcon('video'))->toBe(Heroicon::OutlinedVideoCamera)
+        ->and($entry->getFileIcon('audio'))->toBe(Heroicon::OutlinedMusicalNote)
+        ->and($entry->getFileIcon('pdf'))->toBe(Heroicon::OutlinedDocumentText)
+        ->and($entry->getFileIcon('other'))->toBe(Heroicon::OutlinedDocument);
 });
 
 it('has default preview height', function () {

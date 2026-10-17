@@ -75,6 +75,14 @@
             return $entry->getFileSize($path);
         };
         
+        // Renders an icon through Filament, so an alias registered by the host replaces the default.
+        $renderIcon = fn ($icon, ?string $alias, string $class, \Filament\Support\Enums\IconSize $size) => \Filament\Support\generate_icon_html(
+            $icon,
+            $alias,
+            new \Illuminate\View\ComponentAttributeBag(['class' => $class]),
+            $size,
+        );
+
         // Helper to get file icon
         $getFileIcon = function($fileType, $extension = null) use ($entry) {
             return $entry->getFileIcon($fileType, $extension);
@@ -150,7 +158,7 @@
                                     x-on:click="open = true"
                                 >
                                     {{-- Icon --}}
-                                    @svg($fileIcon, 'w-5 h-5 text-gray-400 group-hover:text-primary-500 flex-shrink-0')
+                                    {{ $renderIcon($fileIcon, null, 'w-5 h-5 text-gray-400 group-hover:text-primary-500 flex-shrink-0', \Filament\Support\Enums\IconSize::Medium) }}
                                     
                                     {{-- Filename --}}
                                     <span class="text-sm font-medium text-gray-900 dark:text-white truncate flex-1">{{ $fileTitle }}</span>
@@ -208,7 +216,7 @@
                                                     class="text-gray-400 hover:text-gray-500 focus:outline-none flex-shrink-0"
                                                     x-on:click="open = false"
                                                 >
-                                                    @svg('heroicon-o-x-mark', 'w-6 h-6')
+                                                    {{ $renderIcon(\Filament\Support\Icons\Heroicon::OutlinedXMark, \gheith3\FileViewEntryPlugin\View\FileViewEntryIconAlias::ACTIONS_CLOSE, 'w-6 h-6', \Filament\Support\Enums\IconSize::Large) }}
                                                 </button>
                                             </div>
 
@@ -273,7 +281,7 @@
                                                         
                                                         @default
                                                             <div class="w-full p-8 bg-gray-50 dark:bg-gray-800 flex flex-col items-center justify-center">
-                                                                @svg($fileIcon, 'w-16 h-16 text-gray-400 mb-4')
+                                                                {{ $renderIcon($fileIcon, null, 'w-16 h-16 text-gray-400 mb-4', \Filament\Support\Enums\IconSize::TwoExtraLarge) }}
                                                                 <p class="text-gray-600 dark:text-gray-400">Preview not available</p>
                                                             </div>
                                                     @endswitch
@@ -287,7 +295,7 @@
                                                     target="_blank"
                                                     class="inline-flex w-full justify-center rounded-md bg-primary-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-primary-500 sm:ml-3 sm:w-auto"
                                                 >
-                                                    @svg('heroicon-o-arrow-top-right-on-square', 'w-4 h-4 mr-1')
+                                                    {{ $renderIcon(\Filament\Support\Icons\Heroicon::OutlinedArrowTopRightOnSquare, \gheith3\FileViewEntryPlugin\View\FileViewEntryIconAlias::ACTIONS_OPEN, 'w-4 h-4 mr-1', \Filament\Support\Enums\IconSize::Small) }}
                                                     @lang('Open')
                                                 </a>
                                                 @if($copyable)
@@ -296,7 +304,7 @@
                                                         class="mt-3 inline-flex w-full justify-center rounded-md bg-white dark:bg-gray-800 px-3 py-2 text-sm font-semibold text-gray-900 dark:text-gray-100 shadow-sm ring-1 ring-inset ring-gray-300 dark:ring-gray-600 hover:bg-gray-50 dark:hover:bg-gray-700 sm:mt-0 sm:w-auto"
                                                         x-on:click="navigator.clipboard.writeText('{{ $fileUrl }}'); $dispatch('notify', { message: 'Link copied!', type: 'success' })"
                                                     >
-                                                        @svg('heroicon-o-clipboard', 'w-4 h-4 mr-1')
+                                                        {{ $renderIcon(\Filament\Support\Icons\Heroicon::OutlinedClipboard, \gheith3\FileViewEntryPlugin\View\FileViewEntryIconAlias::ACTIONS_COPY_LINK, 'w-4 h-4 mr-1', \Filament\Support\Enums\IconSize::Small) }}
                                                         @lang('Copy Link')
                                                     </button>
                                                 @endif
@@ -307,7 +315,7 @@
                                                         download
                                                         class="mt-3 inline-flex w-full justify-center rounded-md bg-white dark:bg-gray-800 px-3 py-2 text-sm font-semibold text-gray-900 dark:text-gray-100 shadow-sm ring-1 ring-inset ring-gray-300 dark:ring-gray-600 hover:bg-gray-50 dark:hover:bg-gray-700 sm:mt-0 sm:w-auto"
                                                     >
-                                                        @svg('heroicon-o-arrow-down-tray', 'w-4 h-4 mr-1')
+                                                        {{ $renderIcon(\Filament\Support\Icons\Heroicon::OutlinedArrowDownTray, \gheith3\FileViewEntryPlugin\View\FileViewEntryIconAlias::ACTIONS_DOWNLOAD, 'w-4 h-4 mr-1', \Filament\Support\Enums\IconSize::Small) }}
                                                         @lang('Download')
                                                     </a>
                                                 @endif
@@ -336,7 +344,7 @@
                                 
                             >
                                 {{-- Icon --}}
-                                @svg($fileIcon, 'w-5 h-5 text-gray-400 group-hover:text-primary-500 flex-shrink-0')
+                                {{ $renderIcon($fileIcon, null, 'w-5 h-5 text-gray-400 group-hover:text-primary-500 flex-shrink-0', \Filament\Support\Enums\IconSize::Medium) }}
                                 
                                 {{-- Filename --}}
                                 <span class="text-sm font-medium text-gray-900 dark:text-white truncate flex-1">{{ $fileTitle }}</span>
@@ -365,7 +373,7 @@
                                     >
                                         {{-- Icon at top --}}
                                         <div class="flex-1 flex items-center justify-center">
-                                            @svg($fileIcon, 'w-12 h-12 text-gray-400 group-hover:text-primary-500')
+                                            {{ $renderIcon($fileIcon, null, 'w-12 h-12 text-gray-400 group-hover:text-primary-500', \Filament\Support\Enums\IconSize::ExtraLarge) }}
                                         </div>
                                         
                                         {{-- Filename --}}
@@ -424,7 +432,7 @@
                                                     class="text-gray-400 hover:text-gray-500 focus:outline-none flex-shrink-0"
                                                     x-on:click="open = false"
                                                 >
-                                                    @svg('heroicon-o-x-mark', 'w-6 h-6')
+                                                    {{ $renderIcon(\Filament\Support\Icons\Heroicon::OutlinedXMark, \gheith3\FileViewEntryPlugin\View\FileViewEntryIconAlias::ACTIONS_CLOSE, 'w-6 h-6', \Filament\Support\Enums\IconSize::Large) }}
                                                 </button>
                                             </div>
 
@@ -488,7 +496,7 @@
                                                         
                                                         @default
                                                             <div class="w-full p-8 bg-gray-50 dark:bg-gray-800 flex flex-col items-center justify-center">
-                                                                @svg($fileIcon, 'w-16 h-16 text-gray-400 mb-4')
+                                                                {{ $renderIcon($fileIcon, null, 'w-16 h-16 text-gray-400 mb-4', \Filament\Support\Enums\IconSize::TwoExtraLarge) }}
                                                                 <p class="text-gray-600 dark:text-gray-400">Preview not available</p>
                                                             </div>
                                                     @endswitch
@@ -502,7 +510,7 @@
                                                     target="_blank"
                                                     class="inline-flex w-full justify-center rounded-md bg-primary-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-primary-500 sm:ml-3 sm:w-auto"
                                                 >
-                                                    @svg('heroicon-o-arrow-top-right-on-square', 'w-4 h-4 mr-1')
+                                                    {{ $renderIcon(\Filament\Support\Icons\Heroicon::OutlinedArrowTopRightOnSquare, \gheith3\FileViewEntryPlugin\View\FileViewEntryIconAlias::ACTIONS_OPEN, 'w-4 h-4 mr-1', \Filament\Support\Enums\IconSize::Small) }}
                                                     @lang('Open')
                                                 </a>
                                                 @if($downloadable)
@@ -512,7 +520,7 @@
                                                         download
                                                         class="mt-3 inline-flex w-full justify-center rounded-md bg-white dark:bg-gray-800 px-3 py-2 text-sm font-semibold text-gray-900 dark:text-gray-100 shadow-sm ring-1 ring-inset ring-gray-300 dark:ring-gray-600 hover:bg-gray-50 dark:hover:bg-gray-700 sm:mt-0 sm:w-auto"
                                                     >
-                                                        @svg('heroicon-o-arrow-down-tray', 'w-4 h-4 mr-1')
+                                                        {{ $renderIcon(\Filament\Support\Icons\Heroicon::OutlinedArrowDownTray, \gheith3\FileViewEntryPlugin\View\FileViewEntryIconAlias::ACTIONS_DOWNLOAD, 'w-4 h-4 mr-1', \Filament\Support\Enums\IconSize::Small) }}
                                                         @lang('Download')
                                                     </a>
                                                 @endif
@@ -545,7 +553,7 @@
                                     ])>
                                         <div class="flex items-center justify-between">
                                             <div class="flex items-center gap-2 min-w-0">
-                                                @svg($fileIcon, 'w-5 h-5 text-gray-500 flex-shrink-0')
+                                                {{ $renderIcon($fileIcon, null, 'w-5 h-5 text-gray-500 flex-shrink-0', \Filament\Support\Enums\IconSize::Medium) }}
                                                 <span class="text-sm font-medium text-gray-900 dark:text-white truncate">{{ $fileTitle }}</span>
                                             </div>
                                             <div class="flex items-center gap-2 flex-shrink-0">
@@ -556,7 +564,7 @@
                                                         title="@lang('Copy link')"
                                                         x-on:click="navigator.clipboard.writeText('{{ $fileUrl }}'); $dispatch('notify', { message: 'Link copied!', type: 'success' })"
                                                     >
-                                                        @svg('heroicon-o-clipboard', 'w-5 h-5')
+                                                        {{ $renderIcon(\Filament\Support\Icons\Heroicon::OutlinedClipboard, \gheith3\FileViewEntryPlugin\View\FileViewEntryIconAlias::ACTIONS_COPY_LINK, 'w-5 h-5', \Filament\Support\Enums\IconSize::Medium) }}
                                                     </button>
                                                 @endif
                                                 @if($withModalEye && $canPreview)
@@ -567,7 +575,7 @@
                                                         title="@lang('Preview')"
                                                         x-on:click="open = true"
                                                     >
-                                                        @svg('heroicon-o-eye', 'w-5 h-5')
+                                                        {{ $renderIcon(\Filament\Support\Icons\Heroicon::OutlinedEye, \gheith3\FileViewEntryPlugin\View\FileViewEntryIconAlias::ACTIONS_PREVIEW, 'w-5 h-5', \Filament\Support\Enums\IconSize::Medium) }}
                                                     </button>
                                                 @endif
                                                 @if($copyable)
@@ -577,7 +585,7 @@
                                                         title="@lang('Copy link')"
                                                         x-on:click="navigator.clipboard.writeText('{{ $fileUrl }}'); $dispatch('notify', { message: 'Link copied!', type: 'success' })"
                                                     >
-                                                        @svg('heroicon-o-clipboard', 'w-5 h-5')
+                                                        {{ $renderIcon(\Filament\Support\Icons\Heroicon::OutlinedClipboard, \gheith3\FileViewEntryPlugin\View\FileViewEntryIconAlias::ACTIONS_COPY_LINK, 'w-5 h-5', \Filament\Support\Enums\IconSize::Medium) }}
                                                     </button>
                                                 @endif
                                                 @if($downloadable)
@@ -588,7 +596,7 @@
                                                         class="text-gray-400 hover:text-primary-500"
                                                         title="@lang('Download')"
                                                     >
-                                                        @svg('heroicon-o-arrow-down-tray', 'w-5 h-5')
+                                                        {{ $renderIcon(\Filament\Support\Icons\Heroicon::OutlinedArrowDownTray, \gheith3\FileViewEntryPlugin\View\FileViewEntryIconAlias::ACTIONS_DOWNLOAD, 'w-5 h-5', \Filament\Support\Enums\IconSize::Medium) }}
                                                     </a>
                                                 @endif
                                             </div>
@@ -659,14 +667,14 @@
                                             
                                             @default
                                                 <div class="w-full p-8 bg-gray-50 dark:bg-gray-800 flex flex-col items-center justify-center">
-                                                    @svg($fileIcon, 'w-16 h-16 text-gray-400 mb-4')
+                                                    {{ $renderIcon($fileIcon, null, 'w-16 h-16 text-gray-400 mb-4', \Filament\Support\Enums\IconSize::TwoExtraLarge) }}
                                                     <p class="text-gray-600 dark:text-gray-400">Preview not available</p>
                                                     <a 
                                                         href="{{ $fileUrl }}" 
                                                         target="_blank"
                                                         class="mt-4 inline-flex items-center text-primary-600 hover:text-primary-500"
                                                     >
-                                                        @svg('heroicon-o-arrow-top-right-on-square', 'w-4 h-4 mr-1')
+                                                        {{ $renderIcon(\Filament\Support\Icons\Heroicon::OutlinedArrowTopRightOnSquare, \gheith3\FileViewEntryPlugin\View\FileViewEntryIconAlias::ACTIONS_OPEN, 'w-4 h-4 mr-1', \Filament\Support\Enums\IconSize::Small) }}
                                                         @lang('Open File')
                                                     </a>
                                                 </div>
@@ -719,7 +727,7 @@
                                                             class="text-gray-400 hover:text-gray-500 focus:outline-none flex-shrink-0"
                                                             x-on:click="open = false"
                                                         >
-                                                            @svg('heroicon-o-x-mark', 'w-6 h-6')
+                                                            {{ $renderIcon(\Filament\Support\Icons\Heroicon::OutlinedXMark, \gheith3\FileViewEntryPlugin\View\FileViewEntryIconAlias::ACTIONS_CLOSE, 'w-6 h-6', \Filament\Support\Enums\IconSize::Large) }}
                                                         </button>
                                                     </div>
 
@@ -773,7 +781,7 @@
                                                                 
                                                                 @default
                                                                     <div class="w-full p-8 bg-gray-50 dark:bg-gray-800 flex flex-col items-center justify-center">
-                                                                        @svg($fileIcon, 'w-16 h-16 text-gray-400 mb-4')
+                                                                        {{ $renderIcon($fileIcon, null, 'w-16 h-16 text-gray-400 mb-4', \Filament\Support\Enums\IconSize::TwoExtraLarge) }}
                                                                         <p class="text-gray-600 dark:text-gray-400">Preview not available</p>
                                                                     </div>
                                                             @endswitch
@@ -787,7 +795,7 @@
                                                             target="_blank"
                                                             class="inline-flex w-full justify-center rounded-md bg-primary-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-primary-500 sm:ml-3 sm:w-auto"
                                                         >
-                                                            @svg('heroicon-o-arrow-top-right-on-square', 'w-4 h-4 mr-1')
+                                                            {{ $renderIcon(\Filament\Support\Icons\Heroicon::OutlinedArrowTopRightOnSquare, \gheith3\FileViewEntryPlugin\View\FileViewEntryIconAlias::ACTIONS_OPEN, 'w-4 h-4 mr-1', \Filament\Support\Enums\IconSize::Small) }}
                                                             @lang('Open')
                                                         </a>
                                                         @if($downloadable)
@@ -797,7 +805,7 @@
                                                                 download
                                                                 class="mt-3 inline-flex w-full justify-center rounded-md bg-white dark:bg-gray-800 px-3 py-2 text-sm font-semibold text-gray-900 dark:text-gray-100 shadow-sm ring-1 ring-inset ring-gray-300 dark:ring-gray-600 hover:bg-gray-50 dark:hover:bg-gray-700 sm:mt-0 sm:w-auto"
                                                             >
-                                                                @svg('heroicon-o-arrow-down-tray', 'w-4 h-4 mr-1')
+                                                                {{ $renderIcon(\Filament\Support\Icons\Heroicon::OutlinedArrowDownTray, \gheith3\FileViewEntryPlugin\View\FileViewEntryIconAlias::ACTIONS_DOWNLOAD, 'w-4 h-4 mr-1', \Filament\Support\Enums\IconSize::Small) }}
                                                                 @lang('Download')
                                                             </a>
                                                         @endif
@@ -820,7 +828,7 @@
                             'w-full aspect-square p-4 rounded-2xl flex flex-col items-center justify-center text-center',
                             'bg-gray-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-700' => $contained,
                         ])>
-                            @svg('heroicon-o-document', 'w-12 h-12 text-danger-500 mb-2')
+                            {{ $renderIcon(\Filament\Support\Icons\Heroicon::OutlinedDocument, \gheith3\FileViewEntryPlugin\View\FileViewEntryIconAlias::STATES_FILE_NOT_FOUND, 'w-12 h-12 text-danger-500 mb-2', \Filament\Support\Enums\IconSize::ExtraLarge) }}
                             <span class="text-sm text-danger-600 truncate w-full">{{ $fileTitle }}</span>
                             <span class="text-xs text-gray-500 mt-1">@lang('File not found')</span>
                         </div>
